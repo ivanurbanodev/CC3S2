@@ -1,7 +1,7 @@
 
-# Repositorio de la actividad2
+# Repositorio de la actividad3
 
-https://github.com/ivanurbanodev/Actividad2.git
+https://github.com/ivanurbanodev/Actividad3.git
 
 # Preguntas:
 ## 1. ¿Cómo te ha ayudado Git a mantener un historial claro y organizado de tus cambios?
