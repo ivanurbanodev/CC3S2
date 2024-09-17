@@ -1,2 +1,6 @@
+<<<<<<< HEAD
 Este es el contenido inicial del proyecto
 
+=======
+Este es un cambio en la feature-branch
+>>>>>>> feature-branch
