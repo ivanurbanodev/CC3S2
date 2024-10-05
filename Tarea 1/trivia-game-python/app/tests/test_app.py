@@ -9,8 +9,6 @@ def test_question_incorrect_answer():
     question = Question("What is 2 + 2?", ["1", "2", "3", "4"], "4")
     assert not question.is_correct("2")
 
-from trivia import Quiz, Question
-
 def test_quiz_scoring():
     quiz = Quiz()
     question = Question("What is 2 + 2?", ["1", "2", "3", "4"], "4")
