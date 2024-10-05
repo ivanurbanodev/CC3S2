@@ -1,0 +1,24 @@
+version: '3.8'  
+
+services:  # Definimos los servicios, es decir, los contenedores que se van a levantar.
+  
+  db:  # Servicio para la base de datos.
+    image: postgres:13  # Usamos la imagen oficial de PostgreSQL en su versión 13.
+    environment:  # Variables de entorno necesarias para configurar la base de datos.
+      POSTGRES_USER: user 
+      POSTGRES_PASSWORD: password 
+      POSTGRES_DB: trivia_db  
+    ports:
+      - "5432:5432"  # Exponemos el puerto 5432 para que podamos acceder a la base de datos desde fuera del contenedor.
+
+  web:  # Servicio para la aplicación web.
+    build: .  # Le indicamos a Docker que construya la imagen utilizando el Dockerfile que se encuentra en el directorio actual.
+    command: uvicorn main:app --host 0.0.0.0 --port 8000  # Comando para iniciar el servidor Uvicorn (FastAPI).
+    ports:
+      - "8000:8000"  # Exponemos el puerto 8000 para acceder a la aplicación web.
+    volumes:
+      - .:/app  # Sincronizamos el directorio actual con el directorio /app dentro del contenedor.
+    environment:  
+      DATABASE_URL: postgres://user:password@db:5432/trivia_db  # URL de la base de datos que la aplicación utilizará.
+    depends_on:
+      - db
