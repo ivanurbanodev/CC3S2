@@ -22,4 +22,8 @@ def run_quiz():
         else:
             break
 
-    print(f"\nJuego terminado. Respuestas correctas: {quiz.correct_answers}, incorrectas: {quiz.incorrect_answers}")
+    print(f"\nJuego terminado.")
+    # Se agrearon las preguntas y sus respectivas respuestas
+    print(f"Preguntas contestadas: {quiz.current_question_index}")
+    print(f"Respuestas correctas: {quiz.correct_answers}")
+    print(f"Respuestas incorrectas: {quiz.incorrect_answers}")
