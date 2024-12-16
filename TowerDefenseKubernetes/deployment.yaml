@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tower-defense-deployment
+spec:
+  replicas: 1  # Número de réplicas de tu aplicación
+  selector:
+    matchLabels:
+      app: tower-defense-game  # Selector que conecta con los Pods
+  template:
+    metadata:
+      labels:
+        app: tower-defense-game  # Etiqueta para identificar el Pod
+    spec:
+      containers:
+      - name: tower-defense-game
+        image: tower-defense-game:latest  # Imagen Docker que contiene tu aplicación
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080  # Puerto expuesto por el contenedor

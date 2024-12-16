@@ -1,0 +1,16 @@
+FROM python:3.9-slim
+
+# Establece el directorio de trabajo dentro del contenedor
+WORKDIR /app
+
+# Copia el código de la aplicación al contenedor
+COPY . /app/
+
+# Configura la variable de entorno PYTHONPATH
+ENV PYTHONPATH=/app
+
+# Expone el puerto en el que correrá la aplicación
+EXPOSE 8080
+
+# Comando para ejecutar la aplicación
+CMD ["python", "tower_defense/main.py"]

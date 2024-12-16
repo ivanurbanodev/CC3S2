@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tower-defense-service  # Nombre del servicio
+spec:
+  selector:
+    app: tower-defense-game  # Selector que conecta con los Pods
+  ports:
+  - protocol: TCP
+    port: 80                # Puerto accesible desde el exterior
+    targetPort: 8080        # Puerto dentro del contenedor
+  type: LoadBalancer         # Tipo de servicio para balancear tráfico
