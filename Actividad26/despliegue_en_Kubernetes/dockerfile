@@ -1,0 +1,7 @@
+FROM nginx:alpine
+
+# Copiar el archivo HTML a la carpeta de NGINX
+COPY index.html /usr/share/nginx/html/index.html
+
+# Exponer el puerto 80 para el servicio web
+EXPOSE 80

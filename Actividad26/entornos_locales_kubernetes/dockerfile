@@ -1,0 +1,13 @@
+FROM node:alpine
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+COPY app.js .
+
+RUN npm install
+
+# Exponer el puerto que usará la app
+EXPOSE 3000
+
+CMD ["node", "app.js"]
