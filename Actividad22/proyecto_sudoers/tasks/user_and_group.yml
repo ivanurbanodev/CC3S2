@@ -1,0 +1,12 @@
+---
+- name: Asegurar que el grupo 'desarrolladores' exista
+  group:
+    name: desarrolladores
+    state: present
+
+- name: Crear el usuario 'bender'
+  user:
+    name: bender
+    shell: /bin/bash
+    groups: desarrolladores
+    append: yes

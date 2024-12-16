@@ -1,0 +1,13 @@
+---
+- name: Establecer variable para el archivo de la aplicación
+  set_fact:
+    greeting_application_file: "/opt/engineering/greeting.py"
+
+- name: Crear archivo sudoers para el grupo de desarrolladores
+  template:
+    src: "developers.j2"
+    dest: "/etc/sudoers.d/developers"
+    validate: "/usr/sbin/visudo -cf %s"
+  owner: root
+  group: root
+  mode: '0440'

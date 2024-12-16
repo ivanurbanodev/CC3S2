@@ -1,0 +1,7 @@
+Cmnd_Alias GREETING_STOP = /bin/systemctl stop greeting, /bin/systemctl stop greeting.service
+Cmnd_Alias GREETING_START = /bin/systemctl start greeting, /bin/systemctl start greeting.service
+Cmnd_Alias GREETING_RESTART = /bin/systemctl restart greeting, /bin/systemctl restart greeting.service
+
+Host_Alias LOCAL_VM = {{ ansible_default_ipv4.address }}
+
+%desarrolladores LOCAL_VM=(root) NOPASSWD: GREETING_STOP, GREETING_START, GREETING_RESTART, sudoedit {{ greeting_application_file }}

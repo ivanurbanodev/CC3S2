@@ -1,0 +1,40 @@
+---
+- name: Instalar python3-flask, gunicorn3 y nginx
+  apt:
+    name:
+      - python3-flask
+      - gunicorn3
+      - nginx
+    update_cache: yes
+
+- name: Crear directorio para la aplicación
+  file:
+    path: /opt/engineering
+    state: directory
+    mode: '0750'
+    owner: bender
+    group: desarrolladores
+
+- name: Copiar aplicación de muestra de Flask
+  copy:
+    src: "{{ item }}"
+    dest: "/opt/engineering/"
+    mode: '0750'
+    owner: bender
+    group: desarrolladores
+  loop:
+    - files/greeting.py
+    - files/wsgi.py
+
+- name: Copiar el archivo de la unidad Systemd para el saludo
+  copy:
+    src: files/greeting.service
+    dest: "/etc/systemd/system/greeting.service"
+    mode: '0644'
+
+- name: Iniciar y habilitar la aplicación de saludo
+  systemd:
+    name: greeting.service
+    state: started
+    enabled: yes
+    daemon_reload: yes

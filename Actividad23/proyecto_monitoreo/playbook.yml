@@ -1,0 +1,49 @@
+---
+- name: Aprovisionar y monitorear VM
+  hosts: all
+  become: yes
+  become_method: sudo
+  remote_user: vagrant
+  tasks:
+    - name: Instalar herramientas de monitoreo y solución de problemas
+      apt:
+        name:
+          - htop
+          - iotop
+          - sysstat
+          - lsof
+          - tcpdump
+          - strace
+          - net-tools
+        update_cache: yes
+        state: present
+
+    - name: Copiar scripts de monitoreo
+      copy:
+        src: scripts/
+        dest: /home/vagrant/scripts/
+        mode: '0755'
+        owner: vagrant
+        group: vagrant
+
+    - name: Programar tareas de monitoreo
+      cron:
+        name: "Ejecutar monitoreo de recursos"
+        user: vagrant
+        minute: "*/5"
+        job: "/home/vagrant/scripts/monitoreo.sh >> /home/vagrant/monitoreo.log 2>&1"
+
+    - name: Configurar alerta por uso de disco
+      copy:
+        src: scripts/alerta_espacio_disco.sh
+        dest: /usr/local/bin/alerta_espacio_disco.sh
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: Configurar cron para alerta de espacio en disco
+      cron:
+        name: "Alerta de espacio en disco"
+        user: root
+        hour: "*/1"
+        job: "/usr/local/bin/alerta_espacio_disco.sh"

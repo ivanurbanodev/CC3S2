@@ -1,0 +1,12 @@
+[Unit]
+Description=Greeting Application
+
+[Service]
+WorkingDirectory=/opt/engineering
+ExecStart=/usr/bin/gunicorn3 --access-logfile - --error-logfile - wsgi:app
+Restart=always
+User=bender
+Group=desarrolladores
+
+[Install]
+WantedBy=multi-user.target

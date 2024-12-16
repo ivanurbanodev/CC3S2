@@ -1,0 +1,14 @@
+---
+- name: Aprovisionar VM
+  hosts: all
+  become: yes
+  become_method: sudo
+  remote_user: vagrant
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - import_tasks: tasks/user_and_group.yml
+    - import_tasks: tasks/web_application.yml
+    - import_tasks: tasks/sudoers.yml
+  vars_files:
+    - templates/developers.j2
