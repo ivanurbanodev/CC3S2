@@ -1,0 +1,30 @@
+server {
+    listen 443 ssl;
+    server_name localhost;
+
+    ssl_certificate /etc/nginx/ssl/nginx.crt;
+    ssl_certificate_key /etc/nginx/ssl/nginx.key;
+
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+    ssl_ciphers EECDH+AESGCM:EDH+AESGCM;
+    ssl_ecdh_curve secp384r1;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_tickets off;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    root /var/www/html;
+    index index.html index.htm;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+# Redirección de HTTP a HTTPS
+server {
+    listen 80;
+    server_name localhost;
+    return 301 https://$host$request_uri;
+}

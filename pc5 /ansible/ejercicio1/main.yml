@@ -1,0 +1,26 @@
+- name: Actualizar sistema operativo
+  apt:
+    update_cache: yes
+
+- name: Crear grupo
+  group:
+    name: admin
+    state: present # Aseguremonos que el grupo haya sido creado
+    
+- name: Crear usuarios
+  user:
+    name: devuser
+    shell: /bin/bash
+    password: "{{ 'nM231@dna?w1E' | password_hash('sha512') }}" 
+
+- name: Asignar a devuser al grupo de desarrolladores
+  user:
+    name: devuser
+    groups: admin
+    append: yes
+
+- name: Set the timezone
+  ansible.builtin.timezone:
+    name: UTC
+  tags:
+    - timezone

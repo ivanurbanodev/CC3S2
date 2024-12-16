@@ -1,0 +1,66 @@
+- name: Actualizar los paquetes
+  apt:
+    update_cache: yes
+
+- name: Instalar el paquete nginx
+  apt:
+    name: nginx
+    state: present
+
+- name: Instalar UFW
+  apt:
+    name: ufw
+    state: present
+
+- name: Permitir SSH en el puerto 22
+  ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: Permitir HTTP en el puerto 80
+  ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+
+- name: Permitir HTTPS en el puerto 443
+  ufw:
+    rule: allow
+    port: '443'
+    proto: tcp
+    
+
+- name: Habilitar UFW
+  ufw:
+    state: enabled
+
+- name: Crear directorio para certificados SSL
+  file:
+    path: /etc/nginx/ssl
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Generar certificado SSL autofirmado
+  command: >
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 
+    -keyout /etc/nginx/ssl/nginx.key 
+    -out /etc/nginx/ssl/nginx.crt 
+    -subj "/C=PE/ST=Lima/L=Lima/O=Uni/OU=Uni/CN=localhost"
+  args:
+    creates: /etc/nginx/ssl/nginx.crt
+
+- name: Configurar nginx para ssl 
+  template:
+    src: ../templates/ssl_conf.conf.j2
+    dest: /etc/nginx/sites-available/default
+  notify: Reiniciar nginx
+
+- name: Habilitar sitio de SSL en nginx
+  file:
+    src: /etc/nginx/sites-available/default
+    dest: /etc/nginx/sites-enabled/default
+    state: link
+

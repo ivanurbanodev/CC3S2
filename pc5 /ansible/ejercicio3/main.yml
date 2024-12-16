@@ -1,0 +1,74 @@
+- name: Instalar python y sus dependencias
+  apt:
+    name:
+      - python3
+      - python3-pip
+      - python3-venv
+      - nginx
+    state: present 
+    update_cache: yes
+
+- name: Crear un entorno virtual de python
+  command: python3 -m venv /opt/webapp/venv
+  args:
+    creates: /opt/webapp/venv
+
+- name: Instalar flask y gunicorn
+  pip:
+    name:
+      - flask
+      - gunicorn
+    virtualenv: /opt/webapp/venv 
+    state: present
+
+- name: Crear un directorio para la aplicación web
+  file:
+    path: /opt/webapp
+    state: directory
+    mode: '0755'
+
+- name: Copiemos nuestra aplicacion de flask
+  template:
+    src: ../templates/flask_app.py.j2
+    dest: /opt/webapp/app.py
+    mode: '0644' 
+
+- name: Creamos un servicio para ejecutar multiples instancias de flask_app
+  template:
+    src: ../templates/flask_service.service.j2
+    dest: "/etc/systemd/system/flask-app-{{ item }}.service"
+    mode: '0644'
+  loop: 
+    - 8001 
+    - 8002
+
+- name: Configuramos el balancer de Nginx
+  template:
+    src: templates/nginx_loadbalancer.conf.j2
+    dest: /etc/nginx/sites-available/loadbalancer
+    mode: '0644'
+
+- name: Activar el load balancer de nginx
+  file:
+    src: /etc/nginx/sites-available/loadbalancer
+    dest: /etc/nginx/sites-enabled/loadbalancer
+    state: link
+
+- name: Reiniciar systemd para que reconozca los servicios
+  systemd:
+    daemon_reload: yes
+
+- name: Activar e iniciar los servicios de flask
+  systemd:
+    name: "flask-app-{{ item }}"
+    enabled: yes
+    state: started
+  loop:
+    - 8001
+    - 8002
+
+- name: Reiniciar nginx
+  systemd:
+    name: nginx
+    state: restarted
+    enabled: yes

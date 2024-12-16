@@ -1,0 +1,4 @@
+- name: Reiniciar sshd
+  systemd:
+    name: sshd
+    status: restarted

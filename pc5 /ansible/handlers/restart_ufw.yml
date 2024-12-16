@@ -1,0 +1,4 @@
+- name: Reiniciar ufw
+  systemd:
+    name: ufw
+    state: restarted

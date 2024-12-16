@@ -1,0 +1,19 @@
+[Unit]
+Description=Aplicacion web en el puerto {{ item }}
+After=network.target
+
+[Service]
+Type=simple
+User=root
+Environment=PORT={{ item }}
+WorkingDirectory=/opt/webapp
+ExecStart=/opt/webapp/venv/bin/gunicorn \
+    -b 0.0.0.0:{{ item }} \
+    --chdir /opt/webapp \
+    app:app
+
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
